@@ -57,53 +57,71 @@ return (
       }}
     />
 
-    {/* glow orbs (darker hues) */}
+    {/* glow orbs */}
     <div className="absolute -top-40 -left-40 h-[600px] w-[600px] animate-pulse rounded-full bg-gradient-to-r from-violet-700 to-fuchsia-500 opacity-30 blur-3xl mix-blend-screen" />
     <div className="absolute -bottom-40 -right-40 h-[600px] w-[600px] animate-pulse rounded-full bg-gradient-to-r from-sky-600 to-cyan-400 opacity-30 blur-3xl mix-blend-screen" />
 
-    <section className="relative mx-auto grid max-w-6xl items-center gap-12 px-6 pb-20 pt-28 md:grid-cols-2">
-      {/* Left */}
+    {/* HERO */}
+    <section className="relative mx-auto grid max-w-6xl items-center gap-12 px-6 pb-16 pt-28 md:grid-cols-2">
+      {/* Left copy */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-neutral-200 shadow-sm backdrop-blur">
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-neutral-200 shadow-sm backdrop-blur">
           <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400" />
           <span className="font-medium">Beta</span>
           <span className="opacity-70">Built for SMBs</span>
         </div>
 
-        <h1 className="text-balance text-4xl font-semibold leading-tight md:text-5xl">
-          Launch Google &amp; Meta ads in minutes —{" "}
-          <span className="bg-gradient-to-r from-white via-neutral-200 to-neutral-400 bg-clip-text underline decoration-white/20 underline-offset-4">
-            <span className="text-transparent">no marketing degree required</span>
-          </span>
-          .
+        {/* Clean headline */}
+        <h1 className="text-balance text-4xl font-semibold leading-tight md:text-6xl">
+          Launch Google and Meta ads in minutes
         </h1>
 
-        <p className="mt-5 max-w-xl text-lg text-neutral-300">
-          Connect your accounts, generate ads with AI (or upload your own), one-click
-          publish, and get plain-English insights. We handle pixels, GA4, budgets, and
-          reviews — you stay in control.
+        {/* Sub-headline */}
+        <p className="mt-4 text-xl font-medium text-emerald-400 md:text-2xl">
+  No marketing degree required
+</p>
+
+        {/* Mission statement */}
+        <p className="mt-6 max-w-xl text-lg text-neutral-300">
+          Our mission is to remove the barriers to running effective ads. We guide you
+          through the marketing funnel, highlight what platforms need to learn your
+          audience, and make deployment effortless—so your budget actually works for you.
         </p>
 
-        <ul className="mt-6 space-y-3 text-sm text-neutral-200">
-          <li className="flex items-start gap-3">
+
+        {/* Quick pillars (value props) */}
+        <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+          <li className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur">
             <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-neutral-100" />
-            <span>One-click deploy with safe defaults</span>
+            <div className="text-sm">
+              <div className="font-medium text-neutral-100">Guided funnel</div>
+              <div className="text-neutral-300">Know what to provide and why it matters.</div>
+            </div>
           </li>
-          <li className="flex items-start gap-3">
-            <PlugZap className="mt-0.5 h-5 w-5 shrink-0 text-neutral-100" />
-            <span>Pixel + GA4 setup assistant</span>
-          </li>
-          <li className="flex items-start gap-3">
-            <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-neutral-100" />
-            <span>AI ad copy &amp; images — with smart critique</span>
-          </li>
-          <li className="flex items-start gap-3">
+          <li className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur">
             <Rocket className="mt-0.5 h-5 w-5 shrink-0 text-neutral-100" />
-            <span>Simple analytics and guidance you can act on</span>
+            <div className="text-sm">
+              <div className="font-medium text-neutral-100">One-click deploy</div>
+              <div className="text-neutral-300">Connect accounts and publish safely.</div>
+            </div>
+          </li>
+          <li className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur">
+            <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-neutral-100" />
+            <div className="text-sm">
+              <div className="font-medium text-neutral-100">AI creatives</div>
+              <div className="text-neutral-300">Generate images & copy or upload your own.</div>
+            </div>
+          </li>
+          <li className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur">
+            <PlugZap className="mt-0.5 h-5 w-5 shrink-0 text-neutral-100" />
+            <div className="text-sm">
+              <div className="font-medium text-neutral-100">Plain-English insights</div>
+              <div className="text-neutral-300">Understand performance and next steps.</div>
+            </div>
           </li>
         </ul>
       </motion.div>
@@ -115,12 +133,9 @@ return (
         transition={{ duration: 0.8, delay: 0.2 }}
         className="relative rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur"
       >
-        <div className="absolute -top-3 left-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[11px] font-medium text-neutral-200 shadow-sm backdrop-blur">
-          Early Access
-        </div>
-        <h3 className="mb-2 text-lg font-semibold text-white">Request early access</h3>
+        <h3 className="mb-2 text-lg font-semibold text-white">Join the waitlist</h3>
         <p className="mb-4 text-sm text-neutral-300">
-          Join the waitlist to be among the first to try it.
+          Tell us you’re interested. We’ll let you know when early access opens.
         </p>
         <form onSubmit={subscribe} className="space-y-4">
           <input
@@ -154,55 +169,57 @@ return (
               {status.msg}
             </p>
           )}
-          <p className="text-[12px] text-neutral-400">No spam. Unsubscribe anytime.</p>
         </form>
       </motion.div>
     </section>
 
-    {/* How it works */}
-    <section className="mx-auto mt-10 grid max-w-6xl gap-6 px-6 md:grid-cols-3">
-      {[
-        {
-          t: "Connect",
-          d: "Secure OAuth to your Google & Meta ad accounts. You set the budget caps — revoke anytime.",
-          i: <PlugZap className="h-5 w-5" />,
-        },
-        {
-          t: "Create",
-          d: "Upload or generate AI creatives. We auto-check policy and give smart critique.",
-          i: <Sparkles className="h-5 w-5" />,
-        },
-        {
-          t: "Launch",
-          d: "One click deploy with pixel/GA4 tracking and plain-English insights after.",
-          i: <Rocket className="h-5 w-5" />,
-        },
-      ].map((x, i) => (
-        <motion.div
-          key={x.t}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.15 }}
-          viewport={{ once: true }}
-          className="group relative rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-2xl backdrop-blur"
-        >
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs text-neutral-200">
-            <span className="grid h-5 w-5 place-items-center rounded-full border border-white/15 bg-white/5 text-[11px] font-semibold text-neutral-100">
-              {i + 1}
-            </span>
-            <span className="font-medium text-neutral-100">{x.t}</span>
-            <span className="ml-1 opacity-80 text-neutral-100">{x.i}</span>
-          </div>
-          <div className="text-sm text-neutral-300">{x.d}</div>
-        </motion.div>
-      ))}
+    {/* HOW IT WORKS (dedicated section) */}
+    <section className="mx-auto mt-6 max-w-6xl px-6">
+      <h2 className="text-lg font-medium text-neutral-200">How it works</h2>
+      <div className="mt-4 grid gap-6 md:grid-cols-3">
+        {[
+          {
+            t: "Connect",
+            d: "Securely link Google & Meta. Set budget caps and guardrails.",
+            i: <PlugZap className="h-5 w-5" />,
+          },
+          {
+            t: "Create",
+            d: "Use AI to draft images and copy—or upload your own assets.",
+            i: <Sparkles className="h-5 w-5" />,
+          },
+          {
+            t: "Launch",
+            d: "One-click publish with the qualitative signals platforms need to learn faster.",
+            i: <Rocket className="h-5 w-5" />,
+          },
+        ].map((x, i) => (
+          <motion.div
+            key={x.t}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.12 }}
+            viewport={{ once: true }}
+            className="group relative rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-2xl backdrop-blur"
+          >
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs text-neutral-200">
+              <span className="grid h-5 w-5 place-items-center rounded-full border border-white/15 bg-white/5 text-[11px] font-semibold text-neutral-100">
+                {i + 1}
+              </span>
+              <span className="font-medium text-neutral-100">{x.t}</span>
+              <span className="ml-1 opacity-80 text-neutral-100">{x.i}</span>
+            </div>
+            <div className="text-sm text-neutral-300">{x.d}</div>
+          </motion.div>
+        ))}
+      </div>
     </section>
 
-    {/* Credibility */}
+    {/* Credibility / reassurance */}
     <section className="mx-auto mt-16 max-w-3xl px-6 pb-24 text-center text-sm text-neutral-400">
       <p>
-        We don’t promise outcomes — we provide the tools and guardrails so small
-        businesses can advertise with confidence.
+        We don’t promise outcomes—we provide the tools, guidance, and guardrails so
+        small businesses can advertise with confidence.
       </p>
     </section>
   </main>
