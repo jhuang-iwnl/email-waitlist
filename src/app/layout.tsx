@@ -1,4 +1,5 @@
 import "./globals.css";
+import {Analytics} from "@vercel/analytics/react";
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
   return (
@@ -12,6 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="bg-neutral-50 text-neutral-900 antialiased min-h-screen selection:bg-black selection:text-white">
         {children}
+        <Analytics />   {/* pageviews + basic engagement */}
       </body>
     </html>
   );

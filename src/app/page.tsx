@@ -1,27 +1,41 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { clsx } from 'clsx';
 import {motion} from 'framer-motion';
 import { CheckCircle2, Rocket, PlugZap, Sparkles } from "lucide-react";
 
 export default function Page() {
   const [email, setEmail] = useState('');
-  const [utmSource, setUtmSource] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<null | { ok: boolean; msg: string }>(null);
+  // Capture all UTMs + referrer once
+  const [utms, setUtms] = useState<{utm_source?: string; utm_medium?: string; utm_campaign?: string}>({});
+  const [referrer, setReferrer] = useState<string | undefined>(undefined);
+  const hpRef = useRef<HTMLInputElement>(null); // honeypot
 
-  useEffect(() => {
+ useEffect(() => {
     const usp = new URLSearchParams(window.location.search);
-    const s = usp.get('utm_source');
-    if (s) setUtmSource(s);
+    setUtms({
+      utm_source: usp.get('utm_source') || undefined,
+      utm_medium: usp.get('utm_medium') || undefined,
+      utm_campaign: usp.get('utm_campaign') || undefined,
+    });
+    setReferrer(document.referrer || undefined);
   }, []);
 
-  async function joinWaitlist(payload: { email: string }) {
+  async function joinWaitlist(payload: {
+    email: string;
+    source?: string;
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    referrer?: string;
+    hp?: string; // honeypot
+  }) {
     const res = await fetch('https://jdopiajtnnwuznhvypku.supabase.co/functions/v1/subscribe-waitlist', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      // only send email for now
       body: JSON.stringify(payload),
     });
     const data = await res.json();
@@ -34,8 +48,20 @@ export default function Page() {
     setLoading(true);
     setStatus(null);
     try {
-      await joinWaitlist({ email });
-      setStatus({ ok: true, msg: 'You’re on the list! We’ll email you when early access is ready.' });
+      await joinWaitlist({
+        email,
+        source: 'hero_form',
+        ...utms,
+        referrer,
+        hp: hpRef.current?.value || ''  // honeypot (should be empty)
+      });
+
+      // Analytics event (works if Plausible is installed later; safe if not)
+      (window as any).plausible?.('Join Waitlist', {
+        props: { source: 'hero_form', ...utms }
+      });
+
+      setStatus({ ok: true, msg: "You're on the list." });
       setEmail('');
     } catch (err: any) {
       setStatus({ ok: false, msg: err.message || 'Failed to join. Try again.' });
@@ -138,38 +164,40 @@ return (
           Tell us you’re interested. We’ll let you know when early access opens.
         </p>
         <form onSubmit={subscribe} className="space-y-4">
-          <input
-            type="email"
-            required
-            placeholder="you@business.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white placeholder-white/50 outline-none transition focus:border-white/25 focus:ring-2 focus:ring-white/10"
-          />
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            disabled={loading}
-            className={clsx(
-              "w-full rounded-xl py-3 font-medium transition",
-              loading
-                ? "bg-white/10 text-neutral-300"
-                : "bg-white text-neutral-900 hover:opacity-95 active:opacity-90"
-            )}
-          >
-            {loading ? "Joining…" : "Join the waitlist"}
-          </motion.button>
-
-          {status && (
-            <p
-              className={clsx(
-                "text-sm",
-                status.ok ? "text-emerald-400" : "text-rose-400"
-              )}
-            >
-              {status.msg}
-            </p>
+        <input
+          type="email"
+          required
+          placeholder="you@business.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-white placeholder-white/50 outline-none transition focus:border-white/25 focus:ring-2 focus:ring-white/10"
+        />
+        {/* Honeypot (hidden from users) */}
+        <input
+          ref={hpRef}
+          type="text"
+          name="company_website"
+          autoComplete="off"
+          tabIndex={-1}
+          className="hidden"
+        />
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          disabled={loading}
+          className={clsx(
+            "w-full rounded-xl py-3 font-medium transition",
+            loading ? "bg-white/10 text-neutral-300" : "bg-white text-neutral-900 hover:opacity-95 active:opacity-90"
           )}
-        </form>
+        >
+          {loading ? "Joining…" : "Join the waitlist"}
+        </motion.button>
+
+        {status && (
+          <p className={clsx("text-sm", status.ok ? "text-emerald-400" : "text-rose-400")}>
+            {status.msg}
+          </p>
+        )}
+      </form>
       </motion.div>
     </section>
 
