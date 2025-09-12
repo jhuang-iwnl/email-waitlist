@@ -3,14 +3,25 @@
 import { useEffect, useState, useRef } from 'react';
 import { clsx } from 'clsx';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Rocket, PlugZap, Sparkles } from "lucide-react";
+import { CheckCircle2, Rocket, PlugZap, Sparkles } from 'lucide-react';
+
+// --- Types for your API response and Plausible ---
+type JoinOk = { ok: true; msg?: string };
+type JoinErr = { ok?: false; error?: string; msg?: string };
+type JoinResponse = JoinOk | JoinErr;
+
+declare global {
+  interface Window {
+    plausible?: (event: string, options?: { props?: Record<string, string | undefined> }) => void;
+  }
+}
 
 export default function Page() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<null | { ok: boolean; msg: string }>(null);
 
-  // Capture all UTMs + referrer once
+  // Capture UTMs + referrer once
   const [utms, setUtms] = useState<{ utm_source?: string; utm_medium?: string; utm_campaign?: string }>({});
   const [referrer, setReferrer] = useState<string | undefined>(undefined);
   const hpRef = useRef<HTMLInputElement>(null); // honeypot
@@ -33,21 +44,23 @@ export default function Page() {
     utm_campaign?: string;
     referrer?: string;
     hp?: string; // honeypot
-  }) {
-    const res = await fetch('https://jdopiajtnnwuznhvypku.supabase.co/functions/v1/subscribe-waitlist', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const data: unknown = await res.json();
-    if (!res.ok) {
-      // try to read an error message if present
-      const msg =
-        typeof data === 'object' && data !== null && 'error' in (data as any)
-          ? String((data as any).error)
-          : 'Failed to join';
+  }): Promise<JoinResponse> {
+    const res = await fetch(
+      'https://jdopiajtnnwuznhvypku.supabase.co/functions/v1/subscribe-waitlist',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    const data = (await res.json()) as JoinResponse;
+
+    if (!res.ok || 'error' in data) {
+      const msg = ('error' in data && data.error) || data.msg || 'Failed to join';
       throw new Error(msg);
     }
+
     return data;
   }
 
@@ -64,10 +77,8 @@ export default function Page() {
         hp: hpRef.current?.value || '', // honeypot (should be empty)
       });
 
-      // Analytics event (works if Plausible is installed later; safe if not)
-      (window as any).plausible?.('Join Waitlist', {
-        props: { source: 'hero_form', ...utms },
-      });
+      // Analytics event (fires only if Plausible is installed)
+      window.plausible?.('Join Waitlist', { props: { source: 'hero_form', ...utms } });
 
       setStatus({ ok: true, msg: "You're on the list." });
       setEmail('');
@@ -86,9 +97,9 @@ export default function Page() {
         className="pointer-events-none absolute inset-0 opacity-[0.08]"
         style={{
           backgroundImage:
-            "radial-gradient(white 1px, transparent 1px), radial-gradient(white 1px, transparent 1px)",
-          backgroundSize: "22px 22px, 22px 22px",
-          backgroundPosition: "0 0, 11px 11px",
+            'radial-gradient(white 1px, transparent 1px), radial-gradient(white 1px, transparent 1px)',
+          backgroundSize: '22px 22px, 22px 22px',
+          backgroundPosition: '0 0, 11px 11px',
         }}
       />
 
@@ -127,7 +138,7 @@ export default function Page() {
             audience, and make deployment effortless—so your budget actually works for you.
           </p>
 
-          {/* Quick pillars (value props) */}
+          {/* Quick pillars */}
           <ul className="mt-8 grid gap-3 sm:grid-cols-2">
             <li className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur">
               <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-neutral-100" />
@@ -193,15 +204,15 @@ export default function Page() {
               whileTap={{ scale: 0.97 }}
               disabled={loading}
               className={clsx(
-                "w-full rounded-xl py-3 font-medium transition",
-                loading ? "bg-white/10 text-neutral-300" : "bg-white text-neutral-900 hover:opacity-95 active:opacity-90"
+                'w-full rounded-xl py-3 font-medium transition',
+                loading ? 'bg-white/10 text-neutral-300' : 'bg-white text-neutral-900 hover:opacity-95 active:opacity-90'
               )}
             >
-              {loading ? "Joining…" : "Join the waitlist"}
+              {loading ? 'Joining…' : 'Join the waitlist'}
             </motion.button>
 
             {status && (
-              <p className={clsx("text-sm", status.ok ? "text-emerald-400" : "text-rose-400")}>
+              <p className={clsx('text-sm', status.ok ? 'text-emerald-400' : 'text-rose-400')}>
                 {status.msg}
               </p>
             )}
@@ -209,24 +220,24 @@ export default function Page() {
         </motion.div>
       </section>
 
-      {/* HOW IT WORKS (dedicated section) */}
+      {/* HOW IT WORKS */}
       <section className="mx-auto mt-6 max-w-6xl px-6">
         <h2 className="text-lg font-medium text-neutral-200">How it works</h2>
         <div className="mt-4 grid gap-6 md:grid-cols-3">
           {[
             {
-              t: "Connect",
-              d: "Securely link Google & Meta. Set budget caps and guardrails.",
+              t: 'Connect',
+              d: 'Securely link Google & Meta. Set budget caps and guardrails.',
               i: <PlugZap className="h-5 w-5" />,
             },
             {
-              t: "Create",
-              d: "Use AI to draft images and copy—or upload your own assets.",
+              t: 'Create',
+              d: 'Use AI to draft images and copy—or upload your own assets.',
               i: <Sparkles className="h-5 w-5" />,
             },
             {
-              t: "Launch",
-              d: "One-click publish with the qualitative signals platforms need to learn faster.",
+              t: 'Launch',
+              d: 'One-click publish with the qualitative signals platforms need to learn faster.',
               i: <Rocket className="h-5 w-5" />,
             },
           ].map((x, i) => (
